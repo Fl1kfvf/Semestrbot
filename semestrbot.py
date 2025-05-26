@@ -27,7 +27,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 async def search_movie(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Поиск фильма на Кинопоиске"""
+    "Поиск фильма на Кинопоиске"
     if not context.args:
         await update.message.reply_text("Укажите название фильма после команды /search")
         return
@@ -122,7 +122,7 @@ async def get_random_movie(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await update.message.reply_text("Ошибка при выборе фильма")
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Помощь по командам"""
+    "Помощь по командам"
     await update.message.reply_text(
         "Доступные команды:\n\n"
         "/search <название> - Поиск фильма\n"
@@ -132,7 +132,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     )
 
 def main() -> None:
-    """Запуск бота"""
+    "Запуск бота"
     application = Application.builder().token("7907006203:AAHS8z6Uxc-qDo-O3RMO-5hLYq2jFH7o0sk").build()
     
     # Команды
