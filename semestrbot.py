@@ -63,7 +63,6 @@ async def search_movie(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         await update.message.reply_text("Ошибка при поиске фильма")
 
 async def get_imdb_top(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Новый парсинг топа IMDB"""
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
