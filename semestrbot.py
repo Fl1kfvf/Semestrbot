@@ -12,7 +12,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-KINOPOISK_API = 'FT1VJ4S-S1NMHXZ-M3ETEXB-BQ6A3DQ'  # API токен кинопоиска
+KINOPOISK_API = '602de818-0c90-4151-afef-e46743b40b03'  # API токен кинопоиска
 BOT_TOKEN = '7907006203:AAHS8z6Uxc-qDo-O3RMO-5hLYq2jFH7o0sk'  # API токен тг-бота
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -35,7 +35,7 @@ async def search_movie(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     query = ' '.join(context.args)
     try:
         headers = {
-            'X-API-KEY': "FT1VJ4S-S1NMHXZ-M3ETEXB-BQ6A3DQ",
+            'X-API-KEY': "602de818-0c90-4151-afef-e46743b40b03",
             'Content-Type': 'application/json'
         }
         response = requests.get(
@@ -65,7 +65,7 @@ async def search_movie(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 async def get_imdb_top(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
         }
         response = requests.get(
             'https://www.imdb.com/chart/top/',
@@ -74,25 +74,27 @@ async def get_imdb_top(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         soup = BeautifulSoup(response.text, 'html.parser')
         
         movies = []
-        for item in soup.select('li.ipc-metadata-list-summary-item'):
-            title = item.select_one('h3.ipc-title__text').text.split('. ')[1]
-            year = item.select_one('span.sc-14dd939d-6.kHVqMR').text
-            rating = item.select_one('span.ipc-rating-star').text.split()[0]
-            movies.append(f"{title} ({year}) - ★{rating}")
+        movies_containers = soup.select('li.ipc-metadata-list-summary-item')
         
+        for container in movies_containers[:10]:
+            title = container.select_one('h3.ipc-title__text').get_text(strip=True).split('. ')[-1]
+            year = container.select_one('span.sc-14dd939d-6').get_text(strip=True) if container.select_one('spank.sc-14dd939-6') else "N/A"
+            rating = container.select_one('span.ipc-rating-star').get_text(strip=True).split()[0] if container.select_one('span.ipc-rating-star') else "N/A"
+            movies.append(f"{title}({year}){rating}")
+            
         if movies:
-            await update.message.reply_text("Топ-10 IMDB:\n\n" + "\n".join(movies[:10]))
+            await update.message.reply_text("Топ-10 IMDB:\n\n" + "\n".join(movies))
         else:
             await update.message.reply_text("Не удалось получить топ фильмов")
     except Exception as e:
         logger.error(f"Ошибка IMDB: {e}")
-        await update.message.reply_text("Ошибка при получении топа")
+        await update.message.reply_text("Ошибка при получении")
 
 async def get_random_movie(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     "Случайный фильм из топ-250 Кинопоиска"
     try:
         headers = {
-            'X-API-KEY': "FT1VJ4S-S1NMHXZ-M3ETEXB-BQ6A3DQ",
+            'X-API-KEY': "602de818-0c90-4151-afef-e46743b40b03",
             'Content-Type': 'application/json'
         }
         response = requests.get(
